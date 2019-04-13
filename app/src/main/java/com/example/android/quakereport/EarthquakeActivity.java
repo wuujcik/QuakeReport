@@ -52,10 +52,10 @@ public class EarthquakeActivity extends AppCompatActivity {
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                Earthquake restaurant = earthquakes.get(position);
-                if (restaurant.getmWeb() != null) {
+                Earthquake earthquake = earthquakes.get(position);
+                if (earthquake.getmWeb() != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(restaurant.getmWeb()));
+                    intent.setData(Uri.parse(earthquake.getmWeb()));
                     startActivity(intent);
                 }
             }
