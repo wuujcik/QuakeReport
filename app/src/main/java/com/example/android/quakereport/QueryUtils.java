@@ -108,6 +108,13 @@ public final class QueryUtils {
      */
     private static List<Earthquake> extractFeatureFromJson(String earthquakeJSON) {
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(earthquakeJSON)) {
             return null;
