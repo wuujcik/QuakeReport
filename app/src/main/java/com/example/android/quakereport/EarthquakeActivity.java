@@ -22,9 +22,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,25 +42,38 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final String USGS_REQUEST_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
+
+    //test for emptyView
+    //private static final String USGS_REQUEST_URL = "";
+
     //Constant value for the earthquake loader ID.
     private static final int EARTHQUAKE_LOADER_ID = 1;
+
+    //ListView for the list of earthquakes
+    private ListView earthquakeListView;
+    //TextView that is displayed when the list is empty
+    private TextView mEmptyStateTextView;
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
         return new EarthquakeLoader(EarthquakeActivity.this, USGS_REQUEST_URL);
+
     }
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+
+        //if there's no valid list of Earthquakes, shows empty state text that informs of no earthquakes found
+        mEmptyStateTextView.setText(R.string.no_earthquakes_found);
+
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
+        // If there is a valid list of Earthquakes, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (earthquakes != null && !earthquakes.isEmpty()) {
             mAdapter.addAll(earthquakes);
-
         }
     }
 
@@ -76,7 +92,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
         // Get a reference to the ListView, and attach the adapter to the listView.
-        ListView earthquakeListView = findViewById(R.id.list);
+        earthquakeListView = findViewById(R.id.list);
         earthquakeListView.setAdapter(mAdapter);
 
         //When a list item is clicked, the website with more details about the earthquake is opened
@@ -93,6 +109,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             }
         });
 
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        earthquakeListView.setEmptyView(mEmptyStateTextView);
+
         // Get a reference to the LoaderManager, in order to interact with loaders.
         LoaderManager loaderManager = getLoaderManager();
 
@@ -101,5 +120,6 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
     }
+
 
 }
